@@ -37,14 +37,22 @@ public class Main {
         requestRideInsufficientBalance(client2, driver2, 50.0);
         requestRideNotAvailable(client3, driver3, 10);
 
-        successfulRent(client1, driver4, 5);
-        successfulHike(client3, driver5, 5.0);
-
         hikeNotAvailable(client1, client2, driver2, 5);
         rentNotAvailable(client3, client1, driver4, 5);
 
         driverRejectRide(client1, driver4, 2.0);
         clientCancelRide(client3, driver5, 5.0);
+
+        User[] users = {client1, client2, client3};
+        Driver[] drivers = {driver1, driver2, driver3, driver4, driver5};
+
+        // call successfulRent and successfulHike for all possible combinations of users and drivers
+        for (User user : users) {
+            for (Driver driver : drivers) {
+                successfulRent(user, driver, 5);
+                successfulHike(user, driver, 5.0);
+            }
+        }
     }
 
     public static void requestBicycleRide(User client, Driver driver, double distance) {
@@ -92,9 +100,12 @@ public class Main {
             driver.acceptRide(hike);
             hike.startRide();
             hike.endRide();
+            double rating = Math.floor(Math.random() * 5 + 1);
+            client.rateRide(hike, rating);
+            System.out.println("Rating: " + rating);
+            System.out.println("Average rating: " + driver.getRating());
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            throw e;
         }
     }
 
@@ -107,9 +118,13 @@ public class Main {
             driver.acceptRide(rent);
             rent.startRide();
             rent.endRide();
+            // a random integer between 1 and 5 inclusive
+            double rating = Math.floor(Math.random() * 5 + 1);
+            client.rateRide(rent, rating);
+            System.out.println("Rating: " + rating);
+            System.out.println("Average rating: " + driver.getRating());
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            throw e;
         }
     }
 

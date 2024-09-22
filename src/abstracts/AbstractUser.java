@@ -64,4 +64,9 @@ public abstract class AbstractUser extends Identifier implements UserInterface {
         ride.getVehicleOwner().isAvailable = true;
         System.out.println("Ride cancelled");
     }
+
+    public void rateRide(Ride ride, double rating) {
+        ride.setRating(rating);
+        System.out.println("Ride rated");
+    }
 }

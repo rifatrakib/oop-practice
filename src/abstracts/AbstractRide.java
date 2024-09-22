@@ -10,7 +10,7 @@ public abstract class AbstractRide extends Identifier implements PaymentInterfac
     private double distance;
     private int hours;
     public boolean isCompleted = false;
-    public float rating;
+    public double rating;
 
     public AbstractRide(User client, double distance) {
         this.client = client;
@@ -53,7 +53,7 @@ public abstract class AbstractRide extends Identifier implements PaymentInterfac
         return hours;
     }
 
-    public void setRating(float rating) {
+    public void setRating(double rating) {
         this.rating = rating;
         vehicleOwner.setRating(rating);
     }

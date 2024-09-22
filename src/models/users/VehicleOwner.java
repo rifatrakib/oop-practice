@@ -6,7 +6,7 @@ import models.vehicles.Vehicle;
 public class VehicleOwner extends User {
     public Vehicle vehicle;
     private final int ratePerHour;
-    private float rating;
+    private double rating;
     private int totalTrips = 0;
     public boolean isAvailable = true;
 
@@ -44,12 +44,12 @@ public class VehicleOwner extends User {
         return this.ratePerHour;
     }
 
-    public void setRating(float rating) {
+    public void setRating(double rating) {
         this.totalTrips++;
         this.rating = (this.rating + rating) / this.totalTrips;
     }
 
-    public float getRating() {
+    public double getRating() {
         return this.rating;
     }
 
