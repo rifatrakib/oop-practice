@@ -4,22 +4,8 @@ import models.users.User;
 import models.users.VehicleOwner;
 
 public class Hike extends Ride {
-    public Hike(User client, VehicleOwner vehicleOwner, double distance) {
-        super(client, vehicleOwner, distance);
-    }
-
-    @Override
-    public void acceptRide() {
-        VehicleOwner vehicleOwner = getVehicleOwner();
-        if (!vehicleOwner.isAvailable) {
-            throw new IllegalArgumentException("Ride not available");
-        }
-
-        if (vehicleOwner.vehicle.getFarePerKm() <= 0) {
-            throw new IllegalArgumentException("Driver does not provide this service");
-        }
-
-        super.acceptRide();
+    public Hike(User client, double distance) {
+        super(client, distance);
     }
 
     @Override
@@ -27,5 +13,16 @@ public class Hike extends Ride {
         VehicleOwner vehicleOwner = getVehicleOwner();
         double distance = getDistance();
         return vehicleOwner.vehicle.getStartingFare() + (distance - 2) * vehicleOwner.vehicle.getFarePerKm();
+    }
+
+    @Override
+    public boolean canAcceptRide(VehicleOwner vehicleOwner) {
+        double farePerKm = vehicleOwner.vehicle.getFarePerKm();
+        double startingFare = vehicleOwner.vehicle.getStartingFare();
+        if (estimateFare(farePerKm, startingFare) > getClient().getBalance()) {
+            throw new IllegalArgumentException("Client does not have enough balance");
+        }
+
+        return true;
     }
 }

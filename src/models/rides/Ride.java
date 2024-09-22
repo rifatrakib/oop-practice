@@ -5,12 +5,17 @@ import models.users.User;
 import models.users.VehicleOwner;
 
 public class Ride extends AbstractRide {
-    public Ride(User client, VehicleOwner vehicleOwner, double distance) {
-        super(client, vehicleOwner, distance);
+    public Ride(User client, double distance) {
+        super(client, distance);
     }
 
-    public Ride(User client, VehicleOwner vehicleOwner, int hours) {
-        super(client, vehicleOwner, hours);
+    public Ride(User client, int hours) {
+        super(client, hours);
+    }
+
+    @Override
+    public boolean canAcceptRide(VehicleOwner vehicleOwner) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

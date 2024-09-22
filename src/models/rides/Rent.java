@@ -4,22 +4,8 @@ import models.users.User;
 import models.users.VehicleOwner;
 
 public class Rent extends Ride {
-    public Rent(User client, VehicleOwner vehicleOwner, int hours) {
-        super(client, vehicleOwner, hours);
-    }
-
-    @Override
-    public void acceptRide() {
-        VehicleOwner vehicleOwner = getVehicleOwner();
-        if (!vehicleOwner.isAvailable) {
-            throw new IllegalArgumentException("Ride not available");
-        }
-
-        if (vehicleOwner.getRatePerHour() <= 0) {
-            throw new IllegalArgumentException("Driver does not provide this service");
-        }
-
-        super.acceptRide();
+    public Rent(User client, int hours) {
+        super(client, hours);
     }
 
     @Override
@@ -27,5 +13,18 @@ public class Rent extends Ride {
         VehicleOwner vehicleOwner = getVehicleOwner();
         int hours = getHours();
         return hours * vehicleOwner.getRatePerHour();
+    }
+
+    @Override
+    public boolean canAcceptRide(VehicleOwner vehicleOwner) {
+        if (!vehicleOwner.canAcceptHourlyRides()) {
+            throw new IllegalArgumentException("Driver does not provide this service");
+        }
+
+        if (estimateFare(vehicleOwner.getRatePerHour()) > getClient().getBalance()) {
+            throw new IllegalArgumentException("Client does not have enough balance");
+        }
+
+        return true;
     }
 }

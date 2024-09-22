@@ -1,6 +1,7 @@
 package abstracts;
 
 import interfaces.UserInterface;
+import models.rides.Ride;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -53,5 +54,14 @@ public abstract class AbstractUser extends Identifier implements UserInterface {
     @Override
     public double getBalance() {
         return balance;
+    }
+
+    public void requestRide(Ride ride) {
+        System.out.println("Ride requested.");
+    }
+
+    public void cancelRide(Ride ride) {
+        ride.getVehicleOwner().isAvailable = true;
+        System.out.println("Ride cancelled");
     }
 }

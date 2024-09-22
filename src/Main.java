@@ -35,98 +35,136 @@ public class Main {
 
         requestBicycleRide(client1, driver1, 5.0);
         requestRideInsufficientBalance(client2, driver2, 50.0);
-        requestRideNotAvailable(client3, driver3, 10.0);
+        requestRideNotAvailable(client3, driver3, 10);
 
         successfulRent(client1, driver4, 5);
         successfulHike(client3, driver5, 5.0);
 
         hikeNotAvailable(client1, client2, driver2, 5);
         rentNotAvailable(client3, client1, driver4, 5);
+
+        driverRejectRide(client1, driver4, 2.0);
+        clientCancelRide(client3, driver5, 5.0);
     }
 
     public static void requestBicycleRide(User client, Driver driver, double distance) {
-        Hike hike = new Hike(client, driver, distance);
+        System.out.println("Testing bicycle ride: should result in an failure because the driver does not provide this service.");
+        Hike hike = new Hike(client, distance);
 
         try {
-            hike.requestRide();
-            hike.acceptRide();
+            client.requestRide(hike);
+            driver.acceptRide(hike);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     public static void requestRideInsufficientBalance(User client, Driver driver, double distance) {
-        Hike hike = new Hike(client, driver, distance);
+        System.out.println("Testing ride with insufficient balance: should result in an failure because the client does not have enough balance.");
+        Hike hike = new Hike(client, distance);
 
         try {
-            hike.requestRide();
+            client.requestRide(hike);
+            driver.acceptRide(hike);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public static void requestRideNotAvailable(User client, Driver driver, double distance) {
-        Rent rent = new Rent(client, driver, 5);
+    public static void requestRideNotAvailable(User client, Driver driver, int hours) {
+        System.out.println("Testing ride not available: should result in an failure because the driver does not provide this service.");
+        Rent rent = new Rent(client, hours);
 
         try {
-            rent.requestRide();
-            rent.acceptRide();
+            client.requestRide(rent);
+            driver.acceptRide(rent);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     public static void successfulHike(User client, Driver driver, double distance) {
-        Hike hike = new Hike(client, driver, distance);
+        System.out.println("Testing successful hike.");
+        Hike hike = new Hike(client, distance);
 
         try {
-            hike.requestRide();
-            hike.acceptRide();
+            client.requestRide(hike);
+            driver.acceptRide(hike);
             hike.startRide();
             hike.endRide();
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            throw e;
         }
     }
 
     public static void successfulRent(User client, Driver driver, int hours) {
-        Rent rent = new Rent(client, driver, hours);
+        System.out.println("Testing successful rent.");
+        Rent rent = new Rent(client, hours);
 
         try {
-            rent.requestRide();
-            rent.acceptRide();
+            client.requestRide(rent);
+            driver.acceptRide(rent);
             rent.startRide();
             rent.endRide();
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            throw e;
         }
     }
 
     public static void hikeNotAvailable(User client1, User client2, Driver driver, double distance) {
-        Hike hike1 = new Hike(client1, driver, distance);
-        Hike hike2 = new Hike(client2, driver, distance);
+        System.out.println("Testing hike not available: should result in an failure because the driver is not available.");
+        Hike hike1 = new Hike(client1, distance);
+        Hike hike2 = new Hike(client2, distance);
 
         try {
-            hike1.requestRide();
-            hike1.acceptRide();
+            client1.requestRide(hike1);
+            driver.acceptRide(hike1);
 
-            hike2.requestRide();
-            hike2.acceptRide();
+            client2.requestRide(hike2);
+            driver.acceptRide(hike2);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     public static void rentNotAvailable(User client1, User client2, Driver driver, int hours) {
-        Rent rent1 = new Rent(client1, driver, hours);
-        Rent rent2 = new Rent(client2, driver, hours);
+        System.out.println("Testing rent not available: should result in an failure because the driver is not available.");
+        Rent rent1 = new Rent(client1, hours);
+        Rent rent2 = new Rent(client2, hours);
 
         try {
-            rent1.requestRide();
-            rent1.acceptRide();
+            client1.requestRide(rent1);
+            driver.acceptRide(rent1);
 
-            rent2.requestRide();
-            rent2.acceptRide();
+            client2.requestRide(rent2);
+            driver.acceptRide(rent2);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void driverRejectRide(User client, Driver driver, double distance) {
+        System.out.println("Testing driver reject ride.");
+        Hike hike = new Hike(client, distance);
+
+        try {
+            client.requestRide(hike);
+            driver.rejectRide();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void clientCancelRide(User client, Driver driver, double distance) {
+        System.out.println("Testing client cancel ride.");
+        Hike hike = new Hike(client, distance);
+
+        try {
+            client.requestRide(hike);
+            driver.acceptRide(hike);
+            client.cancelRide(hike);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

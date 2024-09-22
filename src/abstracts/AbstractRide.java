@@ -1,63 +1,39 @@
 package abstracts;
 
 import interfaces.PaymentInterface;
-import interfaces.RideInterface;
 import models.users.User;
 import models.users.VehicleOwner;
 
-public abstract class AbstractRide extends Identifier implements PaymentInterface, RideInterface {
+public abstract class AbstractRide extends Identifier implements PaymentInterface {
     private final User client;
-    private final VehicleOwner vehicleOwner;
+    private VehicleOwner vehicleOwner;
     private double distance;
     private int hours;
     public boolean isCompleted = false;
     public float rating;
 
-    public AbstractRide(User client, VehicleOwner vehicleOwner, double distance) {
+    public AbstractRide(User client, double distance) {
         this.client = client;
-        this.vehicleOwner = vehicleOwner;
         this.distance = distance;
     }
 
-    public AbstractRide(User client, VehicleOwner vehicleOwner, int hours) {
+    public AbstractRide(User client, int hours) {
         this.client = client;
-        this.vehicleOwner = vehicleOwner;
         this.hours = hours;
     }
 
-    @Override
-    public void requestRide() {
-        double fare = calculateFare();
-        if (client.getBalance() < fare) {
-            throw new IllegalArgumentException("Insufficient balance");
-        }
-
-        System.out.println("Ride requested. Estimated fare: " + fare);
+    public void setVehicleOwner(VehicleOwner vehicleOwner) {
+        this.vehicleOwner = vehicleOwner;
     }
 
-    @Override
-    public void acceptRide() {
-        this.vehicleOwner.isAvailable = false;
-        System.out.println("Ride accepted");
+    public VehicleOwner getVehicleOwner() {
+        return vehicleOwner;
     }
 
-    @Override
-    public void rejectRide() {
-        System.out.println("Ride rejected");
-    }
-
-    @Override
-    public void cancelRide() {
-        vehicleOwner.isAvailable = true;
-        System.out.println("Ride cancelled");
-    }
-
-    @Override
     public void startRide() {
         System.out.println("Ride started");
     }
 
-    @Override
     public void endRide() {
         vehicleOwner.isAvailable = true;
         isCompleted = true;
@@ -67,10 +43,6 @@ public abstract class AbstractRide extends Identifier implements PaymentInterfac
 
     public User getClient() {
         return client;
-    }
-
-    public VehicleOwner getVehicleOwner() {
-        return vehicleOwner;
     }
 
     public double getDistance() {
@@ -86,6 +58,15 @@ public abstract class AbstractRide extends Identifier implements PaymentInterfac
         vehicleOwner.setRating(rating);
     }
 
+    public double estimateFare(int ratePerHour) {
+        return hours * ratePerHour;
+    }
+
+    public double estimateFare(double farePerKm, double startingFare) {
+        return startingFare + (distance - 2) * farePerKm;
+    }
+
+    public abstract boolean canAcceptRide(VehicleOwner vehicleOwner);
     public abstract double calculateFare();
     public abstract void makePayment();
 }

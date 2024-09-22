@@ -1,10 +1,11 @@
 package models.users;
 
+import models.rides.Ride;
 import models.vehicles.Vehicle;
 
 public class VehicleOwner extends User {
     public Vehicle vehicle;
-    private int ratePerHour;
+    private final int ratePerHour;
     private float rating;
     private int totalTrips = 0;
     public boolean isAvailable = true;
@@ -21,8 +22,22 @@ public class VehicleOwner extends User {
         this.ratePerHour = ratePerHour;
     }
 
-    public VehicleOwner(String name, String birthDate, float balance) {
-        super(name, birthDate, balance);
+    public void acceptRide(Ride ride) {
+        if (!isAvailable) {
+            throw new IllegalArgumentException("Ride not available");
+        }
+
+        if (!ride.canAcceptRide(this)) {
+            throw new IllegalArgumentException("Cannot accept ride");
+        }
+
+        ride.setVehicleOwner(this);
+        isAvailable = false;
+        System.out.println("Ride accepted");
+    }
+
+    public void rejectRide() {
+        System.out.println("Ride rejected");
     }
 
     public int getRatePerHour() {
